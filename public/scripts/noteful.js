@@ -399,6 +399,7 @@ const noteful = (function () {
         .then(response => {
           store.currentUser = response;
           store.authorized = true;
+          store.authToken = response.authToken;
           loginForm[0].reset();
 
           return Promise.all([

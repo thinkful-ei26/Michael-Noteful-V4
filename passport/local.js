@@ -24,7 +24,7 @@ const localStrategy = new LocalStrategy((username,password,done) => {
         return done(null, user);
     })
     .catch(err => {
-        if(err.reason ='InvalidLogin'){
+        if(err.reason === 'InvalidLogin'){
             return done(null,false);
         }
         return done(err);
