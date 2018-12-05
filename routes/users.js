@@ -5,8 +5,8 @@ const router = express.Router();
 const User = require('../models/user');
 
 router.post('/', function (req,res,next) {
-    const {username,password,fullname} = req.body;
-
+    const {username,password}= req.body;
+    let {fullname}= req.body;
 
     //BEGIN VALIDATION - Go over the code here to understand it better
     //Rewrite it in my own words or code.
@@ -85,6 +85,13 @@ router.post('/', function (req,res,next) {
 
 
   //// VALIDATION END
+
+
+  //Trim the fullname
+  if(fullname){
+    fullname = fullname.trim();
+  }
+  //
     
     return User.hashPassword(password)
     .then(disgest => {
@@ -105,25 +112,6 @@ router.post('/', function (req,res,next) {
         }
         next(err);        
     });
-    
-    // return User.create({username,password,fullname})
-    // .then(result => {
-    //     if(result){
-    //     console.log(result);
-    //     res.json(result);
-    //     }else{
-    //         const err = new Error('no results');
-    //         err.status = 400;
-    //         next(err);
-    //     }
-    // })
-    // .catch(err => {
-    //     if(err.code === 11000 ){
-    //         err = new Error('username already exists');
-    //         err.status = 400;
-    //     }
-    //     next(err)}
-    //     );
 })
 
 
