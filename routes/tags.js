@@ -73,6 +73,7 @@ router.post('/', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
+  
   if (!name) {
     const err = new Error('Missing `name` in request body');
     err.status = 400;

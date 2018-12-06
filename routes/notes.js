@@ -50,7 +50,6 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.id;
-  console.log(req.user.id);
   // Checking for bad ids
   if (!mongoose.Types.ObjectId.isValid(id)) {
     const err = new Error('The `id` is not valid');
@@ -102,13 +101,16 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  if (toUpdate.tags) {
-    const badIds = toUpdate.tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag));
-    // let temp = req.body.tags;
-    console.log(Array.isArray(req.body.tags));
-
+  if (tags) {
+    const badIds = tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag));
+    
     if(Array.isArray(req.body.tags)){
-      toUpdate.tags.forEach( tag => {
+      tags.forEach( tag => {
+        if(!mongoose.Types.ObjectId.isValid(tag)){
+          const err = new Error('The tags were not valid or owned by the user');
+          err.status = 400;
+          return next(err);  
+        }
         Tag.findById(tag)
         .then(result => {
           
@@ -117,7 +119,6 @@ router.post('/', (req, res, next) => {
             err.status = 400;
             return next(err);
           }
-          
         });
       })
     }
@@ -133,9 +134,9 @@ router.post('/', (req, res, next) => {
   if (newNote.folderId === '') {
     delete newNote.folderId;
   }
-  if(toUpdate.folderId){
+  if(folderId){
    
-    Folder.findById(toUpdate.folderId)
+    Folder.findById(folderId)
     .then(result => {
       if(!userId == result.userId){
         const err = new Error('The Folder does not belong to this user.');
@@ -195,6 +196,11 @@ router.put('/:id', (req, res, next) => {
     const badIds = toUpdate.tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag));
     if(Array.isArray(req.body.tags)){
       toUpdate.tags.forEach( tag => {
+        if(!mongoose.Types.ObjectId.isValid(tag)){
+          const err = new Error('The tags were not valid or owned by the user');
+          err.status = 400;
+          return next(err);  
+        }
         Tag.findById(tag)
         .then(result => {
           

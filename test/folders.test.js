@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 const sandbox = sinon.createSandbox();
 
-describe.only('Noteful API - Folders', function () {
+describe('Noteful API - Folders', function () {
 
   let token;
   let user;
@@ -37,7 +37,8 @@ describe.only('Noteful API - Folders', function () {
       Folder.insertMany(folders),
       Note.insertMany(notes),
       Folder.createIndexes(),
-      Note.createIndexes()
+      Note.createIndexes(),
+      User.createIndexes()
     ])
       .then(([users]) => {
         user = users[0];
@@ -61,7 +62,7 @@ describe.only('Noteful API - Folders', function () {
   describe('GET /api/folders', function () {
 
     it('should return the correct number of folders', function () {
-      const dbPromise = Folder.find();
+      const dbPromise = Folder.find({ userId: user.id });
       const apiPromise = chai.request(app)
         .get('/api/folders')
         .set('Authorization', `Bearer ${token}`);
@@ -71,7 +72,7 @@ describe.only('Noteful API - Folders', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
-          // expect(res.body).to.have.length(data.length);
+          expect(res.body).to.have.length(data.length);
         });
       });
 
@@ -84,7 +85,7 @@ describe.only('Noteful API - Folders', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
-          //expect(res.body).to.have.length(data.length);
+          expect(res.body).to.have.length(data.length);
           res.body.forEach(function (item, i) {
             expect(item).to.be.a('object');
             expect(item).to.have.all.keys('_id','__v', 'userId','name', 'createdAt', 'updatedAt');
