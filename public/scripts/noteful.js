@@ -276,14 +276,14 @@ const noteful = (function () {
     $('.js-folders-list').on('click', '.js-folder-delete', event => {
       event.preventDefault();
       const folderId = getFolderIdFromElement(event.currentTarget);
-
+      console.log(getFolderIdFromElement(event.currentTarget));
       if (folderId === store.currentQuery.folderId) {
         store.currentQuery.folderId = null;
       }
       if (folderId === store.currentNote.folderId) {
         store.currentNote = {};
       }
-
+      console.log(folderId);
       api.remove(`/api/folders/${folderId}`)
         .then(() => {
           return Promise.all([

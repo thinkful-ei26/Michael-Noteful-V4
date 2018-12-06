@@ -93,8 +93,8 @@ describe('Noteful API - Tags', function () {
           expect(res.body).to.have.length(data.length);
           res.body.forEach(function (item, i) {
             expect(item).to.be.a('object');
-            expect(item).to.have.all.keys('_id','__v', 'userId','name', 'createdAt', 'updatedAt');
-            expect(item._id).to.equal(data[i].id);
+            expect(item).to.have.all.keys('id' ,'userId','name', 'createdAt', 'updatedAt');
+            expect(item.id).to.equal(data[i].id);
             expect(item.name).to.equal(data[i].name);
             expect(new Date(item.createdAt)).to.eql(data[i].createdAt);
             expect(new Date(item.updatedAt)).to.eql(data[i].updatedAt);
@@ -133,8 +133,8 @@ describe('Noteful API - Tags', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.all.keys('_id','__v', 'userId','name', 'createdAt', 'updatedAt');
-          expect(res.body._id).to.equal(data.id);
+          expect(res.body).to.have.all.keys('id' ,'userId','name', 'createdAt', 'updatedAt');
+          expect(res.body.id).to.equal(data.id);
           expect(res.body.name).to.equal(data.name);
           expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
           expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
@@ -195,11 +195,11 @@ describe('Noteful API - Tags', function () {
           expect(res).to.have.header('location');
           expect(res).to.be.json;
           expect(body).to.be.a('object');
-          expect(body).to.have.all.keys('_id','__v', 'userId','name', 'createdAt', 'updatedAt');
-          return Tag.findOne({ _id: res.body._id });
+          expect(body).to.have.all.keys('id' ,'userId','name', 'createdAt', 'updatedAt');
+          return Tag.findOne({ _id: res.body.id });
         })
         .then(data => {
-          expect(body._id).to.equal(data.id);
+          expect(body.id).to.equal(data.id);
           expect(body.name).to.equal(data.name);
           expect(new Date(body.createdAt)).to.eql(data.createdAt);
           expect(new Date(body.updatedAt)).to.eql(data.updatedAt);
@@ -286,8 +286,8 @@ describe('Noteful API - Tags', function () {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.all.keys('_id','__v', 'userId','name', 'createdAt', 'updatedAt');
-          expect(res.body._id).to.equal(data.id);
+          expect(res.body).to.have.all.keys('id' ,'userId','name', 'createdAt', 'updatedAt');
+          expect(res.body.id).to.equal(data.id);
           expect(res.body.name).to.equal(updateItem.name);
           expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
           // expect item to have been updated
@@ -410,7 +410,7 @@ describe('Noteful API - Tags', function () {
         .then(function (res) {
           expect(res).to.have.status(204);
           expect(res.body).to.be.empty;
-          return Tag.count({ _id: data.id, userId: user.id });
+          return Tag.count({ id: data.id, userId: user.id });
         })
         .then(count => {
           expect(count).to.equal(0);
