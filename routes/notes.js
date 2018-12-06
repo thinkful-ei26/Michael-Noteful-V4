@@ -192,9 +192,7 @@ router.put('/:id', (req, res, next) => {
   }
 
   if (toUpdate.tags) {
-   
     const badIds = toUpdate.tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag));
-
     if(Array.isArray(req.body.tags)){
       toUpdate.tags.forEach( tag => {
         Tag.findById(tag)
@@ -205,11 +203,9 @@ router.put('/:id', (req, res, next) => {
             err.status = 400;
             return next(err);
           }
-          
         });
       })
     }
-    
     if (badIds.length) {
       const err = new Error('The `tags` array contains an invalid `id`');
       err.status = 400;
