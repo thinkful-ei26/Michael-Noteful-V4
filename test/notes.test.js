@@ -208,7 +208,9 @@ describe('Noteful API - Notes', function () {
       const dbPromise = Note.find({
         $or: [{ title: re }, { content: re }]
       }).sort({ updatedAt: 'desc' });
-      const apiPromise = chai.request(app).get(`/api/notes?searchTerm=${searchTerm}`).set('Authorization', `Bearer ${token}`);
+      const apiPromise = chai.request(app)
+        .get(`/api/notes?searchTerm=${searchTerm}`)
+        .set('Authorization', `Bearer ${token}`);
       return Promise.all([dbPromise, apiPromise])
         .then(([data, res]) => {
           expect(res).to.have.status(200);
@@ -218,17 +220,19 @@ describe('Noteful API - Notes', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Note.schema.options.toObject, 'transform').throws('FakeError');
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Note.schema.options.toJSON, 'transform').throws('FakeError');
 
-    //   return chai.request(app).get('/api/notes')
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+      return chai.request(app)
+        .get('/api/notes')
+        .set('Authorization', `Bearer ${token}`)      
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -277,19 +281,21 @@ describe('Noteful API - Notes', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Note.schema.options.toObject, 'transform').throws('FakeError');
-    //   return Note.findOne()
-    //     .then(data => {
-    //       return chai.request(app).get(`/api/notes/${data.id}`);
-    //     })
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Note.schema.options.toJSON, 'transform').throws('FakeError');
+      return Note.findOne()
+        .then(data => {
+          return chai.request(app)
+            .get(`/api/notes/${data.id}`)
+            .set('Authorization', `Bearer ${token}`);
+        })
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -444,24 +450,25 @@ describe('Noteful API - Notes', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Note.schema.options.toObject, 'transform').throws('FakeError');
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Note.schema.options.toJSON, 'transform').throws('FakeError');
 
-    //   const newItem = {
-    //     title: 'The best article about cats ever!',
-    //     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...'
-    //   };
+      const newItem = {
+        title: 'The best article about cats ever!',
+        content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...'
+      };
 
-    //   return chai.request(app)
-    //     .post('/api/notes')
-    //     .send(newItem)
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+      return chai.request(app)
+        .post('/api/notes')
+        .send(newItem)
+        .set('Authorization', `Bearer ${token}`)
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -701,26 +708,27 @@ describe('Noteful API - Notes', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Note.schema.options.toObject, 'transform').throws('FakeError');
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Note.schema.options.toJSON, 'transform').throws('FakeError');
 
-    //   const updateItem = {
-    //     title: 'What about dogs?!',
-    //     content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
-    //   };
-    //   return Note.findOne()
-    //     .then(data => {
-    //       return chai.request(app)
-    //         .put(`/api/notes/${data.id}`)
-    //         .send(updateItem);
-    //     })
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+      const updateItem = {
+        title: 'What about dogs?!',
+        content: 'Lorem ipsum dolor sit amet, sed do eiusmod tempor...'
+      };
+      return Note.findOne()
+        .then(data => {
+          return chai.request(app)
+            .put(`/api/notes/${data.id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updateItem);
+        })
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -752,19 +760,21 @@ describe('Noteful API - Notes', function () {
         });
     });
 
-  //   it('should catch errors and respond properly', function () {
-  //     sandbox.stub(express.response, 'sendStatus').throws('FakeError');
-  //     return Note.findOne()
-  //       .then(data => {
-  //         return chai.request(app).delete(`/api/notes/${data.id}`);
-  //       })
-  //       .then(res => {
-  //         expect(res).to.have.status(500);
-  //         expect(res).to.be.json;
-  //         expect(res.body).to.be.a('object');
-  //         expect(res.body.message).to.equal('Internal Server Error');
-  //       });
-  //   });
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(express.response, 'sendStatus').throws('FakeError');
+      return Note.findOne()
+        .then(data => {
+          return chai.request(app)
+            .delete(`/api/notes/${data.id}`)
+            .set('Authorization', `Bearer ${token}`);
+        })
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 

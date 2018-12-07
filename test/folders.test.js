@@ -97,17 +97,16 @@ describe('Noteful API - Folders', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Folder.schema.options.toJSON, 'transform').throws('FakeError');
-    //   return chai.request(app).get('/api/folders').set('Authorization', `Bearer ${token}`)
-    //     .then(res => {
-    //       console.log(res.status);
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Folder.schema.options.toJSON, 'transform').throws('FakeError');
+      return chai.request(app).get('/api/folders').set('Authorization', `Bearer ${token}`)
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -152,22 +151,22 @@ describe('Noteful API - Folders', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Folder.schema.options.toObject, 'transform').throws('FakeError');
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Folder.schema.options.toJSON, 'transform').throws('FakeError');
 
-    //   let data;
-    //   return Folder.findOne()
-    //     .then(_data => {
-    //       data = _data;
-    //       return chai.request(app).get(`/api/folders/${data._id}`).set('Authorization', `Bearer ${token}`);
-    //     })
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+      let data;
+      return Folder.findOne()
+        .then(_data => {
+          data = _data;
+          return chai.request(app).get(`/api/folders/${data._id}`).set('Authorization', `Bearer ${token}`);
+        })
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -242,21 +241,21 @@ describe('Noteful API - Folders', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Folder.schema.options.toObject, 'transform').throws('FakeError');
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Folder.schema.options.toJSON, 'transform').throws('FakeError');
 
-    //   const newItem = { name: 'newFolder' };
-    //   return chai.request(app)
-    //     .post('/api/folders')
-    //     .set('Authorization', `Bearer ${token}`)
-    //     .send(newItem)
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+      const newItem = { name: 'newFolder' };
+      return chai.request(app)
+        .post('/api/folders')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newItem)
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -363,23 +362,26 @@ describe('Noteful API - Folders', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(Folder.schema.options.toObject, 'transform').throws('FakeError');
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(Folder.schema.options.toJSON, 'transform').throws('FakeError');
 
-    //   const updateItem = { name: 'Updated Name' };
-    //   let data;
-    //   return Folder.findOne()
-    //     .then(_data => {
-    //       data = _data;
-    //       return chai.request(app).put(`/api/folders/${data.id}`).send(updateItem);
-    //     })
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+      const updateItem = { name: 'Updated Name' };
+      let data;
+      return Folder.findOne()
+        .then(_data => {
+          data = _data;
+          return chai.request(app)
+          .put(`/api/folders/${data.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .send(updateItem);
+        })
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
@@ -431,19 +433,21 @@ describe('Noteful API - Folders', function () {
         });
     });
 
-    // it('should catch errors and respond properly', function () {
-    //   sandbox.stub(express.response, 'sendStatus').throws('FakeError');
-    //   return Folder.findOne()
-    //     .then(data => {
-    //       return chai.request(app).delete(`/api/folders/${data.id}`);
-    //     })
-    //     .then(res => {
-    //       expect(res).to.have.status(500);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body.message).to.equal('Internal Server Error');
-    //     });
-    // });
+    it('should catch errors and respond properly', function () {
+      sandbox.stub(express.response, 'sendStatus').throws('FakeError');
+      return Folder.findOne()
+        .then(data => {
+          return chai.request(app)
+          .delete(`/api/folders/${data.id}`)
+          .set('Authorization', `Bearer ${token}`);
+        })
+        .then(res => {
+          expect(res).to.have.status(500);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Internal Server Error');
+        });
+    });
 
   });
 
